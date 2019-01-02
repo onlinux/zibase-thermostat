@@ -1,0 +1,11 @@
+[secret]
+zibaseid = ZiBASE00xxxx
+tokenid  = 00xxxxxx
+
+[global]
+tempvariable=
+setpointdayvariable=
+setpointnightvariable=
+modevariable=
+statevariable=
+thermostatscenario= 
