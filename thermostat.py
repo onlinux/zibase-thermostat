@@ -40,7 +40,7 @@ class Thermostat:
     def __init__(self, config):
         self.zibaseId = config.get('secret').get('zibaseid', None)
         self.tokenId = config.get('secret').get('tokenid', None)
-        self.urlBase = 'http://zibase.net/api/get/ZAPI.php?zibase={}&token={}'.format(
+        self.urlBase = "http://zibase.net/api/get/ZAPI.php?zibase={}&token={}".format(
             self.zibaseId, self.tokenId)
         self.modeList = [0, 5, 6, 16, 32, 48, 64]
         self.state = None
