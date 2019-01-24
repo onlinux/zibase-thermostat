@@ -333,7 +333,7 @@ class RenderThermostatThread(threading.Thread):
         textrect = text.get_rect()
         textrect.topleft = (5, textAnchorY)
         lcd.blit(text, textrect)
-        if thermostat.runningMode == 0:
+        if thermostat.isNight:
             icon = iconNight
         else:
             icon = iconDay
@@ -350,7 +350,7 @@ class RenderThermostatThread(threading.Thread):
         # Display indoor temperature
         size = fontTempHuge.size(thermostat.indoorTemp)
         color = WHITE
-        if thermostat.state == 1:
+        if thermostat.isOn:
             color = DARKORANGE
         text = fontTempHuge.render(thermostat.indoorTemp, True, color)
         textrect = text.get_rect()
@@ -379,7 +379,7 @@ class RenderThermostatThread(threading.Thread):
         textrect.topleft = (50, textAnchorY + textYoffset * 2)
         lcd.blit(text, textrect)
         icon = iconOff
-        if thermostat.state == 1:
+        if thermostat.isOn:
             icon = iconFlame
         lcd.blit(icon.bitmap, (7, textAnchorY + textYoffset * 2))
 
@@ -715,6 +715,7 @@ try:
     tokenId = config.get('secret').get('tokenid')
 except:
     config = None
+
 thermostat = Thermostat(config)
 
 display = 3  # Set the Default display here

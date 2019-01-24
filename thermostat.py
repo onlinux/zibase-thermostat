@@ -55,16 +55,17 @@ class Thermostat:
         self.setpointDay = None
         self.setpointNightValue = None
         self.setpointNight = None
+        self.mode = None
         self.modeValue = None
         self.modeVariable = int(config.get('global').get('modevariable', 31))
         self.modeIndex = None
         self.tempVariable = int(config.get('global').get('tempvariable', 28))
         self.state = None
         self.stateVariable = int(config.get('global').get('statevariable', 13))
-        self.thermostatScenario = int(config.get(
-            'global').get('thermostatscenario', 32))
+        self._thermostatScenario = int(config.get(
+            'global').get('thermostatscenario', 30))
         self.title = 'Thermostat'
-
+        self.read()
         logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s',
                             filename='./thermostat.log', level=logging.DEBUG)
 
@@ -91,6 +92,11 @@ class Thermostat:
         for item in list:
             if item[key] == value:
                 return item
+
+    @property
+    def thermostatScenario(self):
+        """I'm the 'thermostatScenario' property."""
+        return self._thermostatScenario
 
     def read(self):
         start = time.time()
@@ -176,11 +182,43 @@ class Thermostat:
                 logging.warning('RESP EXCEPTION WHEN GETTING  %s' % (url))
 
             elapsed = (time.time() - start) * 1000
-            time.sleep(10)
+            time.sleep(1)
             logging.debug(' setVariable  %i  to  %i zibase.net [%d ms]' % (
                 int(variable), int(value), elapsed))
         else:
             logging.warning(' setVariable  [%s]  is not int' % (str(variable)))
+
+    @property
+    def isOn(self):
+        """ Whether the thermostat is on
+
+            :rtype: bool
+        """
+        return self.state
+
+    @property
+    def isOff(self):
+        """ Whether the thermostat is on
+
+            :rtype: bool
+        """
+        return not self.state
+          
+    @property
+    def isNight(self):
+        """ Whether the runningMode is night mode
+
+            :rtype: bool
+        """
+        return self.runningMode == 0
+
+    @property
+    def isEconomic(self):
+        """ Whether the runningMode is economic
+
+            :rtype: bool
+        """
+        return self.runningMode == 0
 
     def setMode(self, mode):
         self.setVariable(self.modeVariable, int(mode))
